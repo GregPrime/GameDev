@@ -4,6 +4,7 @@
  */
 package gp.galligan.game;
 
+import gp.galligan.game.gfx.Screen;
 import gp.galligan.game.gfx.SpriteSheet;
 
 import java.awt.BorderLayout;
@@ -35,18 +36,18 @@ public class GameEngine extends Canvas implements Runnable {
 	private BufferedImage _image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)_image.getRaster().getDataBuffer()).getData();
 	
-	private SpriteSheet sprites = new SpriteSheet("/spritesheet.png");
+	private Screen screen;
 	private boolean _running   = false;
 	
 	/**
 	 * Singleton instantiation of GameEngine
-	 */	
+	 */
 	private static final GameEngine _engine     = new GameEngine();
 
 	/**
 	 * Private constructor for GameEngine
 	 */
-	private GameEngine() {		
+	private GameEngine() {
 		setMinimumSize(DIMENSION);
 		setMaximumSize(DIMENSION);
 		setPreferredSize(DIMENSION);
@@ -60,6 +61,13 @@ public class GameEngine extends Canvas implements Runnable {
 		_frame.setLocationRelativeTo(null);
 		_frame.setResizable(false);
 		_frame.setVisible(true);
+	}
+
+	/**
+	 * Initialize resources
+	 */
+	public void init() {
+		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 	}
 
 	/**
@@ -79,6 +87,7 @@ public class GameEngine extends Canvas implements Runnable {
 		int tickCount   = 0;
 		int renderCount = 0;
 		
+		init();
 		System.out.println("Game Engine started!");
 		while(_running) {
 			long currentTime = System.nanoTime();
@@ -152,11 +161,9 @@ public class GameEngine extends Canvas implements Runnable {
 	 * Called once per frame, checks for input and updates the screen
 	 */
 	public void update(int tickCount) {
-		for(int i=0; i<pixels.length; i++) {
-			pixels[i] = i+tickCount;
-		}
+		screen.xOffset++;
 	}
-	
+
 	/**
 	 * Renders screen imagery
 	 */
@@ -167,8 +174,10 @@ public class GameEngine extends Canvas implements Runnable {
 			return;
 		}
 		
+		screen.render(pixels, 0, WIDTH);
+
 		Graphics g = bs.getDrawGraphics();
-		
+		g.drawRect(0, 0, getWidth(), getHeight());
 		g.drawImage(_image, 0, 0, getWidth(), getHeight(), null);
 		
 		g.dispose();
@@ -194,7 +203,7 @@ public class GameEngine extends Canvas implements Runnable {
 		if(_input.isKeyDown(KeyEvent.VK_DOWN)) {
 			_gs.getPlayer().moveY(1);
 		}
-	}*/	
+	}*/
 
 	/**
 	 * Starts the game engine and loads to the menu
