@@ -2,6 +2,7 @@
  * InputHandler.java
  * @author Greg (Prime) Galligan
  */
+package gp.galligan.game;
 
 import java.awt.Component;
 import java.awt.event.*;

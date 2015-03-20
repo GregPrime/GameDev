@@ -2,10 +2,12 @@
  * GameEngine.java
  * @author Greg (Prime) Galligan
  */
+package gp.galligan.game;
+
+import gp.galligan.game.gfx.SpriteSheet;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -33,6 +35,7 @@ public class GameEngine extends Canvas implements Runnable {
 	private BufferedImage _image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)_image.getRaster().getDataBuffer()).getData();
 	
+	private SpriteSheet sprites = new SpriteSheet("/spritesheet.png");
 	private boolean _running   = false;
 	
 	/**

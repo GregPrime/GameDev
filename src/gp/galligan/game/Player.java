@@ -2,6 +2,7 @@
  * Player.java
  * @author Greg (Prime) Galligan
  */
+package gp.galligan.game;
 
 public class Player {
 
