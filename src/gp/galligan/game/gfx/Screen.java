@@ -49,7 +49,7 @@ public class Screen {
 					int tilePixel  = offset + xMin + y*row;
 					for(int x = xMin; x < xMax; x++) {
 						int color = tileIndex*4 + sheet.pixels[sheetPixel++];
-						pixels[tilePixels++] = colors[color];
+						pixels[tilePixel++] = colors[color];
 					}
 				}
 			}

@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -21,7 +22,7 @@ import javax.swing.JFrame;
 public class GameEngine extends Canvas implements Runnable {
 
 	private static final String     TITLE       = "Olimu Engine Alpha";
-	private static final int        WIDTH       = 650;
+	private static final int        WIDTH       = 850;
 	private static final int        HEIGHT      = WIDTH * 3/4;
 	private static final Dimension  DIMENSION   = new Dimension(WIDTH, HEIGHT);
 	private static final int        UPDATE_RATE = 30;
@@ -37,12 +38,13 @@ public class GameEngine extends Canvas implements Runnable {
 	private int[] pixels = ((DataBufferInt)_image.getRaster().getDataBuffer()).getData();
 	
 	private Screen screen;
+	private InputHandler inputHandler;
 	private boolean _running   = false;
 	
 	/**
 	 * Singleton instantiation of GameEngine
 	 */
-	private static final GameEngine _engine     = new GameEngine();
+	private static final GameEngine _engine = new GameEngine();
 
 	/**
 	 * Private constructor for GameEngine
@@ -68,6 +70,7 @@ public class GameEngine extends Canvas implements Runnable {
 	 */
 	public void init() {
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
+		inputHandler = new InputHandler(_engine);
 	}
 
 	/**
@@ -91,7 +94,7 @@ public class GameEngine extends Canvas implements Runnable {
 		System.out.println("Game Engine started!");
 		while(_running) {
 			long currentTime = System.nanoTime();
-			int tps     = 0;
+			int tps = 0;
 			
 			while((currentTime-lastUpdateTime)>nsPerUpdate && tps<maxUpdatePerRender) {
 				update(tickCount);
@@ -161,7 +164,10 @@ public class GameEngine extends Canvas implements Runnable {
 	 * Called once per frame, checks for input and updates the screen
 	 */
 	public void update(int tickCount) {
-		screen.xOffset++;
+		if(inputHandler.keyUp.isPressed()) { screen.yOffset--; }
+		if(inputHandler.keyDown.isPressed()) { screen.yOffset++; }
+		if(inputHandler.keyLeft.isPressed()) { screen.xOffset--; }
+		if(inputHandler.keyRight.isPressed()) { screen.xOffset++; }
 	}
 
 	/**

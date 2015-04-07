@@ -4,32 +4,35 @@
  */
 package gp.galligan.game;
 
-import java.awt.Component;
-import java.awt.event.*;
+import java.awt.List;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class InputHandler implements KeyListener
 {
-	
-	private int keyDown;
-	
-	public InputHandler(Component c) {
-		//keys = new boolean[256];
-		//for(int i=0; i<256; i++) {
-		//	keys[i]=false;
-		//}
-		c.addKeyListener(this);
+	public class Key {
+		private boolean pressed  = false;
+		private int timesPressed = 0;
+		
+		public boolean isPressed() { return pressed; }
+		
+		public void toggle(boolean isPressed) {
+			pressed = isPressed;
+			if(isPressed) { timesPressed++; }
+		}
+		
+		public int getTimesPressed() { return timesPressed; }
 	}
 	
-	/**
-	 * Checks if a key is marked as pressed
-	 * @param int
-	 * @return boolean
-	 */
-	public boolean isKeyDown(int keyCode) {
-		if(keyCode>0 && keyCode<256)
-			return (keyDown==keyCode);
-		else
-			return false;
+	public ArrayList<Key> keys = new ArrayList<Key>();
+	public Key keyUp = new Key();
+	public Key keyDown = new Key();
+	public Key keyLeft = new Key();
+	public Key keyRight = new Key();
+	
+	public InputHandler(GameEngine Engine) {
+		Engine.addKeyListener(this);
 	}
 
 	/**
@@ -37,9 +40,7 @@ public class InputHandler implements KeyListener
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode()>0 && e.getKeyCode()<256) {
-			keyDown=e.getKeyCode();
-		}	
+		toggleKey(e.getKeyCode(), true);
 	}
 
 	/**
@@ -47,12 +48,17 @@ public class InputHandler implements KeyListener
 	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode()>0 && e.getKeyCode()<256) {
-			keyDown=-1;
-		}		
+		toggleKey(e.getKeyCode(), false);	
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) { }
+	
+	public void toggleKey(int keyCode, boolean isPressed) {
+		if(keyCode == KeyEvent.VK_W) { keyUp.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_S) { keyDown.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_A) { keyLeft.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_D) { keyRight.toggle(isPressed); }
+	}
 	
 }
