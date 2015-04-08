@@ -4,6 +4,7 @@
  */
 package gp.galligan.game;
 
+import gp.galligan.game.gfx.Colors;
 import gp.galligan.game.gfx.Screen;
 import gp.galligan.game.gfx.SpriteSheet;
 
@@ -11,7 +12,6 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -36,6 +36,7 @@ public class GameEngine extends Canvas implements Runnable {
 	
 	private BufferedImage _image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)_image.getRaster().getDataBuffer()).getData();
+	private int[] colors = new int[6*6*6];
 	
 	private Screen screen;
 	private InputHandler inputHandler;
@@ -69,6 +70,19 @@ public class GameEngine extends Canvas implements Runnable {
 	 * Initialize resources
 	 */
 	public void init() {
+		int index = 0;
+		for(int r=0; r<6; r++) {
+			for(int g=0; g<6; g++) {
+				for(int b=0; b<6; b++) {
+					int rr = (r * 255/5);
+					int gg = (g * 255/5);
+					int bb = (b * 255/5);
+					
+					colors[index++] = rr << 16 | gg << 8 | bb;
+				}
+			}
+		}
+		
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/spritesheet.png"));
 		inputHandler = new InputHandler(_engine);
 	}
@@ -180,8 +194,19 @@ public class GameEngine extends Canvas implements Runnable {
 			return;
 		}
 		
-		screen.render(pixels, 0, WIDTH);
-
+		for(int y=0; y<32; y++) {
+			for(int x=0; x<32; x++) {
+				screen.render(x<<3, y<<3, 0, Colors.getColor(555, 500, 050, 005));
+			}
+		}
+		
+		for(int y=0; y<screen.height; y++) {
+			for(int x=0; x<screen.width; x++) {
+				int colorCode = screen.pixels[x+y*screen.width];
+				if(colorCode < 255) { pixels[x+y * WIDTH] = colors[colorCode]; }
+			}
+		}
+			
 		Graphics g = bs.getDrawGraphics();
 		g.drawRect(0, 0, getWidth(), getHeight());
 		g.drawImage(_image, 0, 0, getWidth(), getHeight(), null);

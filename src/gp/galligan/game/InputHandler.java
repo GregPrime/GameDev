@@ -4,7 +4,6 @@
  */
 package gp.galligan.game;
 
-import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -55,10 +54,10 @@ public class InputHandler implements KeyListener
 	public void keyTyped(KeyEvent e) { }
 	
 	public void toggleKey(int keyCode, boolean isPressed) {
-		if(keyCode == KeyEvent.VK_W) { keyUp.toggle(isPressed); }
-		if(keyCode == KeyEvent.VK_S) { keyDown.toggle(isPressed); }
-		if(keyCode == KeyEvent.VK_A) { keyLeft.toggle(isPressed); }
-		if(keyCode == KeyEvent.VK_D) { keyRight.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP)    { keyUp.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN)  { keyDown.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT)  { keyLeft.toggle(isPressed); }
+		if(keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) { keyRight.toggle(isPressed); }
 	}
 	
 }
